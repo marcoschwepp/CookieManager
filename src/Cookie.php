@@ -20,20 +20,24 @@ final class Cookie
 
    private array $options;
 
-   public function __construct(string $name)
-   {
+   public function __construct(
+	   string $name,
+	   string $value = '',
+	   int $expires = 0,
+	   string $path = '/',
+	   ?string $domain = null,
+	   bool $secure = false,
+	   bool $httpOnly = false,
+	   array $options = []
+   ) {
         $this->name = $name;
-        $this->value = '';
-        $this->expires = 0;
-        $this->path = '/';
-        $this->domain = null;
-        $this->secure = false;
-        $this->httpOnly = true;
-        $this->options = [];
-    }
-
-    public static function fromString(string $name): self {
-        return new self($name);
+        $this->value = $value;
+        $this->expires = $expires;
+        $this->path = $path;
+        $this->domain = $domain;
+        $this->secure = $secure;
+        $this->httpOnly = $httpOnly;
+        $this->options = $options;
     }
 
     public function getName(): string {
