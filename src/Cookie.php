@@ -4,31 +4,23 @@ namespace marcoschwepp\Cookie;
 
 final class Cookie
 {
-    /** @var string */
-   private $name;
+   private string $name;
 
-    /** @var string */
-   private $value;
+   private string $value;
 
-   /** @var int */
-   private $expires;
+   private int $expires;
 
-   /** @var string */
-   private $path;
+   private string $path;
 
-   /** @var string */
-   private $domain;
+   private ?string $domain;
 
-   /** @var boolean */
-   private $secure;
+   private bool $secure;
 
-   /** @var boolean */
-   private $httpOnly;
+   private bool $httpOnly;
 
-   /** @var array */
-   private $options;
+   private array $options;
 
-   public function __construct(string $name) 
+   public function __construct(string $name)
    {
         $this->name = $name;
         $this->value = '';
@@ -40,7 +32,7 @@ final class Cookie
         $this->options = [];
     }
 
-    public function fromString(string $name): self {
+    public static function fromString(string $name): self {
         return new self($name);
     }
 
@@ -49,10 +41,11 @@ final class Cookie
     }
 
     public function setName(string $name): void {
-        if ($name != '') {
-            $this->name = $name;
+        if ('' === $name) {
+            return;
         }
-        
+
+		$this->name = $name;
     }
 
     public function getValue(): string {
@@ -111,29 +104,32 @@ final class Cookie
         $this->options = $options;
     }
 
-    public function getCookie(string $name): mixed {
-        if (isset($_COOKIE[$name])) {
-            return $_COOKIE[$name];
+	/**
+	 * @return mixed|null
+	 */
+    public static function getCookie(string $name) {
+        if (!\array_key_exists($name, $_COOKIE)) {
+            return null;
         }
 
-        return null;
+        return $_COOKIE[$name];
     }
 
-    public function deleteCookie(string $name): bool {
-        if (isset($_COOKIE[$name])) {
-            unset($_COOKIE[$name]);
-
-            return true;
+    public static function deleteCookie(string $name): bool {
+        if (!\array_key_exists($name, $_COOKIE)) {
+            return false;
         }
-        
-        return false;
+
+		unset($_COOKIE[$name]);
+
+		return true;
     }
 
-    public function saveCookie(Cookie $cookie): bool {
-
+    public static function saveCookie(Cookie $cookie): bool {
+		return false;
     }
 
-    public function cookieExists(string $name): bool {
-        return isset($_COOKIE[$name]);
+    public static function cookieExists(string $name): bool {
+        return \array_key_exists($name, $_COOKIE);
     }
 }
