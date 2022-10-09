@@ -92,7 +92,7 @@ final class Cookie
 		$this->domain = $domain;
 	}
 
-	public function getSecure(): bool {
+	public function isSecure(): bool {
 		return $this->secure;
 	}
 
