@@ -104,7 +104,10 @@ final class Cookie
         $this->options = $options;
     }
 
-    public function getCookie(string $name): mixed {
+	/**
+	 * @return mixed|null
+	 */
+    public static function getCookie(string $name) {
         if (!\array_key_exists($name, $_COOKIE)) {
             return null;
         }
@@ -112,21 +115,21 @@ final class Cookie
         return $_COOKIE[$name];
     }
 
-    public function deleteCookie(string $name): bool {
-        if (isset($_COOKIE[$name])) {
-            unset($_COOKIE[$name]);
-
-            return true;
+    public static function deleteCookie(string $name): bool {
+        if (!\array_key_exists($name, $_COOKIE)) {
+            return false;
         }
 
-        return false;
+		unset($_COOKIE[$name]);
+
+		return true;
     }
 
-    public function saveCookie(Cookie $cookie): bool {
-
+    public static function saveCookie(Cookie $cookie): bool {
+		return false;
     }
 
-    public function cookieExists(string $name): bool {
-        return isset($_COOKIE[$name]);
+    public static function cookieExists(string $name): bool {
+        return \array_key_exists($name, $_COOKIE);
     }
 }
