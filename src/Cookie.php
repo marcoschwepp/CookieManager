@@ -126,10 +126,26 @@ final class Cookie
     }
 
     public static function saveCookie(Cookie $cookie): bool {
-		return false;
+		return setcookie(
+			$cookie->name,
+			$cookie->value,
+			$cookie->expires,
+			$cookie->path,
+			$cookie->domain,
+			$cookie->secure,
+			$cookie->httpOnly,
+		);
     }
 
     public static function cookieExists(string $name): bool {
         return \array_key_exists($name, $_COOKIE);
     }
+
+	public function getRemainingTime(): int {
+		return $this->expires - \time();
+	}
+
+	public function setRemainingTime(int $remainingTime): void{
+		$this->expires = \time() + $remainingTime;
+	}
 }
