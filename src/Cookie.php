@@ -32,7 +32,7 @@ final class Cookie
         $this->options = [];
     }
 
-    public function fromString(string $name): self {
+    public static function fromString(string $name): self {
         return new self($name);
     }
 
