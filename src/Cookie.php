@@ -68,6 +68,10 @@ final class Cookie
 		$this->expires = $expires;
 	}
 
+	public function isExpired(): bool {
+		return $this->expires < time();
+	}
+
 	public function getRemainingTime(): int {
 		return $this->expires - \time();
 	}
