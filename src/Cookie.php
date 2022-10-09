@@ -105,11 +105,11 @@ final class Cookie
     }
 
     public function getCookie(string $name): mixed {
-        if (isset($_COOKIE[$name])) {
-            return $_COOKIE[$name];
+        if (!\array_key_exists($name, $_COOKIE)) {
+            return null;
         }
 
-        return null;
+        return $_COOKIE[$name];
     }
 
     public function deleteCookie(string $name): bool {
