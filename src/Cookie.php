@@ -4,31 +4,23 @@ namespace marcoschwepp\Cookie;
 
 final class Cookie
 {
-    /** @var string */
-   private $name;
+   private string $name;
 
-    /** @var string */
-   private $value;
+   private string $value;
 
-   /** @var int */
-   private $expires;
+   private int $expires;
 
-   /** @var string */
-   private $path;
+   private string $path;
 
-   /** @var string */
-   private $domain;
+   private ?string $domain;
 
-   /** @var boolean */
-   private $secure;
+   private bool $secure;
 
-   /** @var boolean */
-   private $httpOnly;
+   private bool $httpOnly;
 
-   /** @var array */
-   private $options;
+   private array $options;
 
-   public function __construct(string $name) 
+   public function __construct(string $name)
    {
         $this->name = $name;
         $this->value = '';
@@ -52,7 +44,7 @@ final class Cookie
         if ($name != '') {
             $this->name = $name;
         }
-        
+
     }
 
     public function getValue(): string {
@@ -125,7 +117,7 @@ final class Cookie
 
             return true;
         }
-        
+
         return false;
     }
 
