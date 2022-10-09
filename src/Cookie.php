@@ -41,10 +41,11 @@ final class Cookie
     }
 
     public function setName(string $name): void {
-        if ($name != '') {
-            $this->name = $name;
+        if ('' === $name) {
+            return;
         }
 
+		$this->name = $name;
     }
 
     public function getValue(): string {
