@@ -2,6 +2,8 @@
 
 namespace marcoschwepp\Cookie;
 
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
 final class Cookie
 {
 	private string $name;
@@ -27,8 +29,7 @@ final class Cookie
 		string $path = '/',
 		?string $domain = null,
 		bool $secure = false,
-		bool $httpOnly = false,
-		array $options = []
+		bool $httpOnly = false
 	) {
 		$this->name = $name;
 		$this->value = $value;
@@ -37,7 +38,26 @@ final class Cookie
 		$this->domain = $domain;
 		$this->secure = $secure;
 		$this->httpOnly = $httpOnly;
-		$this->options = $options;
+	}
+
+	public static function constructFromOptions(
+		array $options
+	): self {
+
+		$resolver = new OptionsResolver();
+		$resolver->setDefaults([ 
+			'name' => '',
+			'value' => '',
+			'expires' => 0,
+			'path' => '/',
+			'domain' => '',
+			'secure' => false,
+			'httpOnly' => false,
+		]);
+
+       	$options = $resolver->resolve($options);
+
+		return new self($options['name'], $options['value'], $options['expires'], $options['path'], $options['domain'], $options['secure'], $options['httpOnly']);
 	}
 
 	public function getName(): string {
@@ -100,7 +120,7 @@ final class Cookie
 		$this->secure = $secure;
 	}
 
-	public function getHttpOnly(): bool {
+	public function isHttpOnly(): bool {
 		return $this->httpOnly;
 	}
 
@@ -116,17 +136,12 @@ final class Cookie
 		$this->options = $options;
 	}
 
-	/**
-	 * @return self
-	 */
-	public static function load(string $name) {
+	public static function load(string $name): self {
 		if (!\array_key_exists($name, $_COOKIE)) {
 			return null;
 		}
 
-		//return $_COOKIE[$name];
-
-		return null;
+		return self::get($name);
 	}
 
 	public function delete(): void {
