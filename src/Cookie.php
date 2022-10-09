@@ -113,28 +113,24 @@ final class Cookie
 	}
 
 	/**
-	 * @return mixed|null
+	 * @return self
 	 */
-	public static function get(string $name) {
+	public static function load(string $name) {
 		if (!\array_key_exists($name, $_COOKIE)) {
 			return null;
 		}
 
-		return $_COOKIE[$name];
+		//return $_COOKIE[$name];
+
+		return null;
 	}
 
-	public static function cookieExists(string $name): bool {
-		return \array_key_exists($name, $_COOKIE);
-	}
-
-	public static function deleteCookie(string $name): bool {
-		if (!\array_key_exists($name, $_COOKIE)) {
-			return false;
+	public function delete(): void {
+		if (!\array_key_exists($this->name, $_COOKIE)) {
+			return;
 		}
 
-		unset($_COOKIE[$name]);
-
-		return true;
+		unset($_COOKIE[$this->name]);
 	}
 
 	public function save(): self {
