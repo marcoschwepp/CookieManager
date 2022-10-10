@@ -167,7 +167,7 @@ final class Cookie
             return NULL;
         }
 
-        return self::get($name);
+        return self::load($name);
     }
 
     public function delete(): void
@@ -186,12 +186,12 @@ final class Cookie
             $this->value,
             $this->expires,
             $this->path,
-            $this->domain,
+            $this->domain ?? '',
             $this->secure,
             $this->httpOnly,
         );
 
-        return self::get($this->name);
+        return self::load($this->name);
     }
 
     public static function normalizeDomain(string $domain): ?string
