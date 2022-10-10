@@ -76,4 +76,29 @@ final class CookieTest extends TestCase
         self::assertNull($domain9);
         self::assertNull($domain10);
     }
+
+    public function testCreateAndSaveCookie(): void
+    {
+        $options = [
+            'name' => 'Test-Cookie',
+            'value' => 'Test-Value',
+            'expires' => \time() + 86400,
+            'path' => '/',
+            'domain' => 'local.de',
+            'secure' => true,
+            'httpOnly' => true,
+        ];
+
+        $cookie = marcoschwepp\Cookie\Cookie::constructFromOptions($options);
+        $cookie->save();
+
+        self::assertSame($cookie->getName(), 'Test-Cookie');
+        self::assertSame($cookie->getValue(), 'Test-Value');
+        self::assertSame($cookie->getExpires(), \time() + 86400);
+        self::assertSame($cookie->getPath(), '/');
+        self::assertSame($cookie->getDomain(), '.local.de');
+
+        self::assertTrue($cookie->isSecure());
+        self::assertTrue($cookie->isHttpOnly());
+    }
 }
