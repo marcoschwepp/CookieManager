@@ -161,10 +161,10 @@ final class Cookie
         $this->options = $options;
     }
 
-    public static function load(string $name): self
+    public static function load(string $name): ?self
     {
         if (!\array_key_exists($name, $_COOKIE)) {
-            return null;
+            return NULL;
         }
 
         return self::get($name);
@@ -194,8 +194,8 @@ final class Cookie
         return self::get($this->name);
     }
 
-    public static function normalizeDomain(string $domain)
-    {
+    public static function normalizeDomain(string $domain): ?string
+	{
         $domain_len = \mb_strlen($domain);
 
         // check for domain length to not continue if not necessary
