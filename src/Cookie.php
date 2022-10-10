@@ -64,7 +64,7 @@ final class Cookie
 
         $options = $resolver->resolve($options);
 
-        return new self($options['name'], $options['value'], $options['expires'], $options['path'], $options['domain'], $options['secure'], $options['httpOnly']);
+        return new self($options['name'], $options['value'], $options['expires'], $options['path'], self::normalizeDomain($options['domain']), $options['secure'], $options['httpOnly']);
     }
 
     public function getName(): string
