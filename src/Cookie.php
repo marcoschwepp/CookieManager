@@ -128,7 +128,7 @@ final class Cookie
 
     public function setDomain(string $domain): void
     {
-        $this->domain = $domain;
+        $this->domain = self::normalizeDomain($domain);
     }
 
     public function isSecure(): bool
@@ -192,5 +192,39 @@ final class Cookie
         );
 
         return self::get($this->name);
+    }
+
+    public static function normalizeDomain(string $domain)
+    {
+        $domain_len = \mb_strlen($domain);
+
+        // check for domain length to not continue if not necessary
+        if (3 > $domain_len || 253 < $domain_len) {
+            return null;
+        }
+
+        // a dot as last character is not valid as a domain
+        if (\substr($domain, -1) === '') {
+            return null;
+        }
+
+        // remove unnecessary http or https
+        if (\mb_stripos($domain, 'http://') === 0) {
+            $domain = \mb_substr($domain, 7);
+        } elseif (\mb_stripos($domain, 'https://') === 0) {
+            $domain = \mb_substr($domain, 8);
+        }
+
+        // validate url with http tag to be able to use the filter
+        if (!\filter_var('http://' . $domain, \FILTER_VALIDATE_URL)) {
+            return null;
+        }
+
+        // if dot is not first character, prepend a dot for maximum compatibility
+        if ('.' !== $domain[0]) {
+            $domain = '.' . $domain;
+        }
+
+        return $domain;
     }
 }
