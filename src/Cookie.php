@@ -204,7 +204,7 @@ final class Cookie
         }
 
         // a dot as last character is not valid as a domain
-        if (\substr($domain, -1) === '') {
+        if (\mb_substr($domain, -1) === '') {
             return null;
         }
 
