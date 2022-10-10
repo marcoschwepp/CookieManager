@@ -77,6 +77,9 @@ final class CookieTest extends TestCase
         self::assertNull($domain10);
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testCreateAndSaveCookie(): void
     {
         $options = [
