@@ -53,7 +53,7 @@ final class Cookie
         $resolver->setDefaults([
             'name' => '',
             'value' => '',
-            'expires' => 0,
+            'expiresAt' => new \DateTimeImmutable(),
             'path' => '/',
             'domain' => '',
             'secure' => false,
@@ -62,7 +62,7 @@ final class Cookie
 
         $options = $resolver->resolve($options);
 
-        return new self($options['name'], $options['value'], $options['expires'], $options['path'], CookieUtility::normalizeDomain($options['domain']), $options['secure'], $options['httpOnly']);
+        return new self($options['name'], $options['value'], $options['expiresAt'], $options['path'], CookieUtility::normalizeDomain($options['domain']), $options['secure'], $options['httpOnly']);
     }
 
     public function getName(): string
