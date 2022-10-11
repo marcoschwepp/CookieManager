@@ -28,8 +28,6 @@ final class Cookie
 
     private bool $httpOnly;
 
-    private array $options;
-
     public function __construct(
         string $name,
         string $value = '',
@@ -140,16 +138,6 @@ final class Cookie
     public function setHttpOnly(bool $httpOnly): void
     {
         $this->httpOnly = $httpOnly;
-    }
-
-    public function getOptions(): array
-    {
-        return $this->options;
-    }
-
-    public function setOptions(array $options): void
-    {
-        $this->options = $options;
     }
 
     public static function load(string $name): self
