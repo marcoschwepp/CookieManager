@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @internal
  *
- * @coversNothing
+ * @covers \marcoschwepp\Cookie\Cookie
  */
 final class CookieTest extends TestCase
 {
