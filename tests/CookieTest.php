@@ -24,13 +24,14 @@ final class CookieTest extends TestCase
         $newCookie = new marcoschwepp\Cookie\Cookie('testCookie');
 
         self::assertSame($newCookie->getName(), 'testCookie');
-        self::assertSame($newCookie->getExpires(), 0);
         self::assertSame($newCookie->getPath(), '/');
 
         self::assertFalse($newCookie->isSecure());
         self::assertFalse($newCookie->isHttpOnly());
 
         self::assertEmpty($newCookie->getValue());
+
+        self::assertInstanceOf(\DateTimeImmutable::class, $newCookie->getExpiresAt());
     }
 
     public function testConstructFromOptions(): void
@@ -42,13 +43,14 @@ final class CookieTest extends TestCase
         $newCookieFromOptions = marcoschwepp\Cookie\Cookie::constructFromOptions($options);
 
         self::assertSame($newCookieFromOptions->getName(), 'testCookie');
-        self::assertSame($newCookieFromOptions->getExpires(), 0);
         self::assertSame($newCookieFromOptions->getPath(), '/');
 
         self::assertFalse($newCookieFromOptions->isSecure());
         self::assertFalse($newCookieFromOptions->isHttpOnly());
 
         self::assertEmpty($newCookieFromOptions->getValue());
+
+        self::assertInstanceOf(\DateTimeImmutable::class, $newCookieFromOptions->getExpiresAt());
     }
 
     public function testGettersAndSetters(): void
@@ -56,7 +58,7 @@ final class CookieTest extends TestCase
         $options = [
             'name' => 'Test-Cookie',
             'value' => 'Test-Value',
-            'expires' => \time() + 86400,
+            'expires' => new \DateTimeImmutable(),
             'path' => '/',
             'domain' => 'local.de',
             'secure' => true,
@@ -67,11 +69,12 @@ final class CookieTest extends TestCase
 
         self::assertSame($cookie->getName(), 'Test-Cookie');
         self::assertSame($cookie->getValue(), 'Test-Value');
-        self::assertSame($cookie->getExpires(), \time() + 86400);
         self::assertSame($cookie->getPath(), '/');
         self::assertSame($cookie->getDomain(), '.local.de');
 
         self::assertTrue($cookie->isSecure());
         self::assertTrue($cookie->isHttpOnly());
+
+        self::assertInstanceOf(\DateTimeImmutable::class, $cookie->getExpiresAt());
     }
 }
