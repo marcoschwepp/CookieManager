@@ -18,7 +18,7 @@ final class Cookie
 
     private string $value;
 
-    private int $expires;
+    private \DateTimeImmutable $expiresAt;
 
     private string $path;
 
@@ -31,7 +31,7 @@ final class Cookie
     public function __construct(
         string $name,
         string $value = '',
-        int $expires = 0,
+        ?\DateTimeImmutable $expiresAt = null,
         string $path = '/',
         ?string $domain = '',
         bool $secure = false,
@@ -39,7 +39,7 @@ final class Cookie
     ) {
         $this->name = $name;
         $this->value = $value;
-        $this->expires = $expires;
+        $this->expiresAt = $expiresAt ?? new \DateTimeImmutable();
         $this->path = $path;
         $this->domain = $domain;
         $this->secure = $secure;
@@ -53,7 +53,7 @@ final class Cookie
         $resolver->setDefaults([
             'name' => '',
             'value' => '',
-            'expires' => 0,
+            'expiresAt' => new \DateTimeImmutable(),
             'path' => '/',
             'domain' => '',
             'secure' => false,
@@ -62,7 +62,7 @@ final class Cookie
 
         $options = $resolver->resolve($options);
 
-        return new self($options['name'], $options['value'], $options['expires'], $options['path'], CookieUtility::normalizeDomain($options['domain']), $options['secure'], $options['httpOnly']);
+        return new self($options['name'], $options['value'], $options['expiresAt'], $options['path'], CookieUtility::normalizeDomain($options['domain']), $options['secure'], $options['httpOnly']);
     }
 
     public function getName(): string
@@ -80,24 +80,29 @@ final class Cookie
         $this->value = $value;
     }
 
-    public function getExpires(): int
+    public function getExpiresAt(): \DateTimeImmutable
     {
-        return $this->expires;
+        return $this->expiresAt;
     }
 
-    public function setExpires(int $expires): void
+    public function expiresAt(\DateTimeImmutable $expiresAt): void
     {
-        $this->expires = $expires;
+        $this->expiresAt = $expiresAt;
+    }
+
+    public function expiresIn(int $seconds): void
+    {
+        $this->expiresAt = new \DateTimeImmutable(\sprintf('+ %s seconds', $seconds));
     }
 
     public function isExpired(): bool
     {
-        return \time() > $this->expires;
+        return \time() > $this->expiresAt->getTimestamp();
     }
 
     public function getRemainingTime(): int
     {
-        return $this->expires - \time();
+        return $this->expiresAt->getTimestamp() - \time();
     }
 
     public function getPath(): string
@@ -165,7 +170,7 @@ final class Cookie
         $cookieIsSet = \setcookie(
             $this->name,
             $this->value,
-            $this->expires,
+            $this->expiresAt->getTimestamp(),
             $this->path,
             $this->domain,
             $this->secure,
