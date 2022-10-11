@@ -53,16 +53,16 @@ final class CookieTest extends TestCase
 
     public function testNormalizeDomain(): void
     {
-        $domain1 = marcoschwepp\Cookie\Cookie::normalizeDomain('www.google.de');
-        $domain2 = marcoschwepp\Cookie\Cookie::normalizeDomain('www.google');
-        $domain3 = marcoschwepp\Cookie\Cookie::normalizeDomain('google.de');
-        $domain4 = marcoschwepp\Cookie\Cookie::normalizeDomain('domain-@test.@de');
-        $domain5 = marcoschwepp\Cookie\Cookie::normalizeDomain('xn--fsqu00a.xn--0zwm56d');
-        $domain6 = marcoschwepp\Cookie\Cookie::normalizeDomain('..');
-        $domain7 = marcoschwepp\Cookie\Cookie::normalizeDomain('.');
-        $domain8 = marcoschwepp\Cookie\Cookie::normalizeDomain('-_-');
-        $domain9 = marcoschwepp\Cookie\Cookie::normalizeDomain('---');
-        $domain10 = marcoschwepp\Cookie\Cookie::normalizeDomain('');
+        $domain1 = marcoschwepp\Cookie\CookieUtility::normalizeDomain('www.google.de');
+        $domain2 = marcoschwepp\Cookie\CookieUtility::normalizeDomain('www.google');
+        $domain3 = marcoschwepp\Cookie\CookieUtility::normalizeDomain('google.de');
+        $domain4 = marcoschwepp\Cookie\CookieUtility::normalizeDomain('domain-@test.@de');
+        $domain5 = marcoschwepp\Cookie\CookieUtility::normalizeDomain('xn--fsqu00a.xn--0zwm56d');
+        $domain6 = marcoschwepp\Cookie\CookieUtility::normalizeDomain('..');
+        $domain7 = marcoschwepp\Cookie\CookieUtility::normalizeDomain('.');
+        $domain8 = marcoschwepp\Cookie\CookieUtility::normalizeDomain('-_-');
+        $domain9 = marcoschwepp\Cookie\CookieUtility::normalizeDomain('---');
+        $domain10 = marcoschwepp\Cookie\CookieUtility::normalizeDomain('');
 
         self::assertSame($domain1, '.www.google.de');
         self::assertSame($domain2, '.www.google');
