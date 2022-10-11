@@ -164,7 +164,7 @@ final class Cookie
     public static function load(string $name): self
     {
         if (!\array_key_exists($name, $_COOKIE)) {
-            return NULL;
+            return null;
         }
 
         $newCookie = $_COOKIE[$name];
@@ -201,7 +201,7 @@ final class Cookie
     }
 
     public static function normalizeDomain(string $domain): ?string
-	{
+    {
         $domain_len = \mb_strlen($domain);
 
         // check for domain length to not continue if not necessary
