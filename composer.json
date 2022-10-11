@@ -20,11 +20,5 @@
         "psr-4": {
             "marcoschwepp\\Cookie\\": "src/"
         }
-    },
-    "scripts": {
-        "coding-standards": [
-            "mkdir -p .build/php-cs-fixer",
-            "php-cs-fixer fix --diff --verbose"
-        ]
     }
 }
