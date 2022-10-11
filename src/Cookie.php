@@ -72,15 +72,6 @@ final class Cookie
         return $this->name;
     }
 
-    public function setName(string $name): void
-    {
-        if ('' === $name) {
-            return;
-        }
-
-        $this->name = $name;
-    }
-
     public function getValue(): string
     {
         return $this->value;
