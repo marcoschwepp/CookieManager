@@ -90,10 +90,10 @@ final class Cookie
         $this->expiresAt = $expiresAt;
     }
 
-	public function expiresIn(int $seconds): void
-	{
-		$this->expiresAt = new \DateTimeImmutable(\sprintf('+ %s seconds', $seconds));
-	}
+    public function expiresIn(int $seconds): void
+    {
+        $this->expiresAt = new \DateTimeImmutable(\sprintf('+ %s seconds', $seconds));
+    }
 
     public function isExpired(): bool
     {

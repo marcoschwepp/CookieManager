@@ -1,6 +1,5 @@
 <?php
 
-
 declare(strict_types=1);
 
 /**
@@ -13,24 +12,24 @@ namespace marcoschwepp\Cookie;
 
 final class CookieUtility
 {
-	public static function normalizeDomain(string $domain): ?string
-	{
-		$domainLength = \mb_strlen($domain);
+    public static function normalizeDomain(string $domain): ?string
+    {
+        $domainLength = \mb_strlen($domain);
 
-		if (3 > $domainLength || 253 < $domainLength) {
-			return null;
-		}
+        if (3 > $domainLength || 253 < $domainLength) {
+            return null;
+        }
 
-		if (\mb_substr($domain, -1) === '.') {
-			return null;
-		}
+        if (\mb_substr($domain, -1) === '.') {
+            return null;
+        }
 
-		$domain = \ltrim(\ltrim($domain, 'https://'), 'http://');
+        $domain = \ltrim(\ltrim($domain, 'https://'), 'http://');
 
-		if (!\filter_var('http://' . $domain, \FILTER_VALIDATE_URL)) {
-			return null;
-		}
+        if (!\filter_var('http://' . $domain, \FILTER_VALIDATE_URL)) {
+            return null;
+        }
 
-		return \sprintf('.%s', \ltrim($domain, '.'));
-	}
+        return \sprintf('.%s', \ltrim($domain, '.'));
+    }
 }
