@@ -58,7 +58,7 @@ final class CookieTest extends TestCase
         $options = [
             'name' => 'Test-Cookie',
             'value' => 'Test-Value',
-            'expires' => new \DateTimeImmutable(),
+            'expiresAt' => new \DateTimeImmutable(),
             'path' => '/',
             'domain' => 'local.de',
             'secure' => true,
