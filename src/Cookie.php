@@ -35,7 +35,7 @@ final class Cookie
         string $value = '',
         int $expires = 0,
         string $path = '/',
-        ?string $domain = null,
+        ?string $domain = '',
         bool $secure = false,
         bool $httpOnly = false
     ) {
@@ -161,13 +161,15 @@ final class Cookie
         $this->options = $options;
     }
 
-    public static function load(string $name): ?self
+    public static function load(string $name): self
     {
         if (!\array_key_exists($name, $_COOKIE)) {
             return NULL;
         }
 
-        return self::load($name);
+        $newCookie = $_COOKIE[$name];
+
+        return new self($name, $cookie['value'], $cookie['expires'], $cookie['path'], self::normalizeDomain($cookie['domain']), $cookie['secure'], $cookie['httpOnly']);
     }
 
     public function delete(): void
@@ -181,15 +183,19 @@ final class Cookie
 
     public function save(): self
     {
-        \setcookie(
+        $cookieIsSet = \setcookie(
             $this->name,
             $this->value,
             $this->expires,
             $this->path,
-            $this->domain ?? '',
+            $this->domain,
             $this->secure,
             $this->httpOnly,
         );
+
+        if (!$cookieIsSet) {
+            return null;
+        }
 
         return self::load($this->name);
     }
