@@ -62,7 +62,7 @@ final class Cookie
 
         $options = $resolver->resolve($options);
 
-        return new self($options['name'], $options['value'], $options['expires'], $options['path'], self::normalizeDomain($options['domain']), $options['secure'], $options['httpOnly']);
+        return new self($options['name'], $options['value'], $options['expires'], $options['path'], CookieUtility::normalizeDomain($options['domain']), $options['secure'], $options['httpOnly']);
     }
 
     public function getName(): string
@@ -117,7 +117,7 @@ final class Cookie
 
     public function setDomain(string $domain): void
     {
-        $this->domain = self::normalizeDomain($domain);
+        $this->domain = CookieUtility::normalizeDomain($domain);
     }
 
     public function isSecure(): bool
@@ -140,7 +140,7 @@ final class Cookie
         $this->httpOnly = $httpOnly;
     }
 
-    public static function load(string $name): self
+    public static function load(string $name): ?self
     {
         if (!\array_key_exists($name, $_COOKIE)) {
             return null;
@@ -148,7 +148,7 @@ final class Cookie
 
         $newCookie = $_COOKIE[$name];
 
-        return new self($name, $cookie['value'], $cookie['expires'], $cookie['path'], self::normalizeDomain($cookie['domain']), $cookie['secure'], $cookie['httpOnly']);
+        return new self($name, $newCookie['value'], $newCookie['expires'], $newCookie['path'], CookieUtility::normalizeDomain($newCookie['domain']), $newCookie['secure'], $newCookie['httpOnly']);
     }
 
     public function delete(): void
@@ -160,7 +160,7 @@ final class Cookie
         unset($_COOKIE[$this->name]);
     }
 
-    public function save(): self
+    public function save(): ?self
     {
         $cookieIsSet = \setcookie(
             $this->name,
@@ -177,39 +177,5 @@ final class Cookie
         }
 
         return self::load($this->name);
-    }
-
-    public static function normalizeDomain(string $domain): ?string
-    {
-        $domain_len = \mb_strlen($domain);
-
-        // check for domain length to not continue if not necessary
-        if (3 > $domain_len || 253 < $domain_len) {
-            return null;
-        }
-
-        // a dot as last character is not valid as a domain
-        if (\mb_substr($domain, -1) === '') {
-            return null;
-        }
-
-        // remove unnecessary http or https
-        if (\mb_stripos($domain, 'http://') === 0) {
-            $domain = \mb_substr($domain, 7);
-        } elseif (\mb_stripos($domain, 'https://') === 0) {
-            $domain = \mb_substr($domain, 8);
-        }
-
-        // validate url with http tag to be able to use the filter
-        if (!\filter_var('http://' . $domain, \FILTER_VALIDATE_URL)) {
-            return null;
-        }
-
-        // if dot is not first character, prepend a dot for maximum compatibility
-        if ('.' !== $domain[0]) {
-            $domain = '.' . $domain;
-        }
-
-        return $domain;
     }
 }

@@ -51,32 +51,6 @@ final class CookieTest extends TestCase
         self::assertEmpty($newCookieFromOptions->getValue());
     }
 
-    public function testNormalizeDomain(): void
-    {
-        $domain1 = marcoschwepp\Cookie\Cookie::normalizeDomain('www.google.de');
-        $domain2 = marcoschwepp\Cookie\Cookie::normalizeDomain('www.google');
-        $domain3 = marcoschwepp\Cookie\Cookie::normalizeDomain('google.de');
-        $domain4 = marcoschwepp\Cookie\Cookie::normalizeDomain('domain-@test.@de');
-        $domain5 = marcoschwepp\Cookie\Cookie::normalizeDomain('xn--fsqu00a.xn--0zwm56d');
-        $domain6 = marcoschwepp\Cookie\Cookie::normalizeDomain('..');
-        $domain7 = marcoschwepp\Cookie\Cookie::normalizeDomain('.');
-        $domain8 = marcoschwepp\Cookie\Cookie::normalizeDomain('-_-');
-        $domain9 = marcoschwepp\Cookie\Cookie::normalizeDomain('---');
-        $domain10 = marcoschwepp\Cookie\Cookie::normalizeDomain('');
-
-        self::assertSame($domain1, '.www.google.de');
-        self::assertSame($domain2, '.www.google');
-        self::assertSame($domain3, '.google.de');
-        self::assertSame($domain5, '.xn--fsqu00a.xn--0zwm56d');
-
-        self::assertNull($domain4);
-        self::assertNull($domain6);
-        self::assertNull($domain7);
-        self::assertNull($domain8);
-        self::assertNull($domain9);
-        self::assertNull($domain10);
-    }
-
     public function testGettersAndSetters(): void
     {
         $options = [
