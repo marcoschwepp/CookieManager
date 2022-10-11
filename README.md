@@ -22,7 +22,7 @@ $cookie = new marcoschwepp\Cookie\Cookie('testCookie');
 
 // optional parameters: 
 $cookie->setValue('123456');
-$cookie->setExpires(0) // e.g. timestamp now + 24h = \time() + 86400
+$cookie->setExpiresAt(new \DateTimeImmutable()) // e.g. timestamp now + 24h = \time() + 86400
 $cookie->setPath('/');
 $cookie->setDomain('.local.de');
 $cookie->setSecure(false);
@@ -35,7 +35,7 @@ $cookie->setHttpOnly(false);
 $options = [
     'name' => 'Test-Cookie',
     'value' => 'Test-Value',
-    'expires' => \time() + 86400,
+    'expiresAt' => new \DateTimeImmutable,
     'path' => '/',
     'domain' => 'local.de',
     'secure' => true,
@@ -50,6 +50,7 @@ $cookie = marcoschwepp\Cookie\Cookie::constructFromOptions($options);
 ```php
 $cookie->save();
 $cookie->delete('testCookie');
+$cookie->load();
 ```
 
 ## Contributing
