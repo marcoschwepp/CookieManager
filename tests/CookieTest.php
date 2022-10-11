@@ -77,10 +77,7 @@ final class CookieTest extends TestCase
         self::assertNull($domain10);
     }
 
-    /**
-     * @runInSeparateProcess
-     */
-    public function testCreateAndSaveCookie(): void
+    public function testGettersAndSetters(): void
     {
         $options = [
             'name' => 'Test-Cookie',
@@ -93,7 +90,6 @@ final class CookieTest extends TestCase
         ];
 
         $cookie = marcoschwepp\Cookie\Cookie::constructFromOptions($options);
-        $cookie->save();
 
         self::assertSame($cookie->getName(), 'Test-Cookie');
         self::assertSame($cookie->getValue(), 'Test-Value');
