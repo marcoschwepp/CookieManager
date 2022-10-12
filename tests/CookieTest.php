@@ -198,7 +198,7 @@ final class CookieTest extends TestCase
     {
         $faker = \Faker\Factory::create();
         $days = $faker->numberBetween(2, 999);
-        $minutes = $faker->numberBetween(1, 59);
+        $minutes = $faker->numberBetween(1, 9999);
 
         return [
             [\sprintf('- %s days', $days), true],
