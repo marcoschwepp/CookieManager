@@ -8,9 +8,7 @@ declare(strict_types=1);
  * @version 1.0.0
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
-require_once __DIR__ . '/DataProvider.php';
+namespace marcoschwepp\Cookie\Test;
 
 use PHPUnit\Framework\TestCase;
 
@@ -22,11 +20,11 @@ use PHPUnit\Framework\TestCase;
 final class CookieUtilityTest extends TestCase
 {
     /**
-     * @dataProvider \DataProvider::domain()
+     * @dataProvider \marcoschwepp\Cookie\Test\DataProvider::domain()
      */
     public function testNormalizeDomain(string $input, ?string $expected): void
     {
-        $normalizedDomain = marcoschwepp\Cookie\CookieUtility::normalizeDomain($input);
+        $normalizedDomain = \marcoschwepp\Cookie\CookieUtility::normalizeDomain($input);
 
         self::assertEquals($expected, $normalizedDomain);
     }

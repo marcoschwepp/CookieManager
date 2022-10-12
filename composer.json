@@ -1,25 +1,30 @@
 {
-    "name": "marcoschwepp/cookie-manager",
-    "description": "Easy management of php cookies",
-    "authors": [
-        {
-            "name": "Marco Schweppe",
-            "email": "marco.schweppe@gmx.de"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {
-        "php": ">=7.4.0",
-        "symfony/options-resolver": "5.4.11"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^9.5.25",
-        "ergebnis/php-cs-fixer-config": "dev-main",
-        "ergebnis/data-provider": "^1.2.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "marcoschwepp\\Cookie\\": "src/"
-        }
-    }
+  "name": "marcoschwepp/cookie-manager",
+  "description": "Easy management of php cookies",
+  "authors": [
+	{
+	  "name": "Marco Schweppe",
+	  "email": "marco.schweppe@gmx.de"
+	}
+  ],
+  "minimum-stability": "dev",
+  "require": {
+	"php": ">=7.4.0",
+	"symfony/options-resolver": "5.4.11"
+  },
+  "require-dev": {
+	"phpunit/phpunit": "^9.5.25",
+	"ergebnis/php-cs-fixer-config": "dev-main",
+	"ergebnis/data-provider": "^1.2.0"
+  },
+  "autoload": {
+	"psr-4": {
+	  "marcoschwepp\\Cookie\\": "src/"
+	}
+  },
+  "autoload-dev": {
+	"psr-4": {
+	  "marcoschwepp\\Cookie\\Test\\": "tests/"
+	}
+  }
 }

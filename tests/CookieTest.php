@@ -8,10 +8,9 @@ declare(strict_types=1);
  * @version 1.0.0
  */
 
-require_once __DIR__ . '/../vendor/autoload.php'; // Autoload files using Composer autoload
+namespace marcoschwepp\Cookie\Test;
 
-require_once __DIR__ . '/DataProvider.php';
-
+use marcoschwepp\Cookie\Cookie;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -21,12 +20,12 @@ use PHPUnit\Framework\TestCase;
  */
 final class CookieTest extends TestCase
 {
-    /**
+	/**
      * @dataProvider \Ergebnis\DataProvider\StringProvider::arbitrary()
      */
     public function testDefaults(string $name): void
     {
-        $newCookie = new marcoschwepp\Cookie\Cookie($name);
+        $newCookie = new \marcoschwepp\Cookie\Cookie($name);
 
         self::assertSame($newCookie->getName(), $name);
         self::assertSame($newCookie->getPath(), '/');
@@ -46,7 +45,7 @@ final class CookieTest extends TestCase
             'name' => $name,
         ];
 
-        $newCookieFromOptions = marcoschwepp\Cookie\Cookie::constructFromOptions($options);
+        $newCookieFromOptions = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
 
         self::assertSame($newCookieFromOptions->getName(), $name);
         self::assertSame($newCookieFromOptions->getPath(), '/');
@@ -58,12 +57,12 @@ final class CookieTest extends TestCase
     }
 
     /**
-     * @dataProvider \DataProvider::cookie()
+     * @dataProvider \marcoschwepp\Cookie\Test\DataProvider::cookie()
      */
     public function testGettersAndSetters(
         string $name,
         string $value,
-        DateTimeImmutable $expiresAt,
+        \DateTimeImmutable $expiresAt,
         string $path,
         string $domain,
         bool $secure,
@@ -80,7 +79,7 @@ final class CookieTest extends TestCase
             'httpOnly' => $httpOnly,
         ];
 
-        $cookie = marcoschwepp\Cookie\Cookie::constructFromOptions($options);
+        $cookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
 
         self::assertSame($cookie->getName(), $name);
         self::assertSame($cookie->getValue(), $value);
@@ -92,13 +91,17 @@ final class CookieTest extends TestCase
         self::assertSame($cookie->isHttpOnly(), $httpOnly);
     }
 
-    public function cookieDataProvider(): array
-    {
-        $faker = Faker\Factory::create();
+	public function testCanSaveCookie(): void
+	{
+		$options = [
+			'name' => 'xxxx',
+			'domain' => 'google.com'
+		];
 
-        return [
-            [$faker->text(), $faker->text(), new \DateTimeImmutable($faker->time()), '/', 'www.google.com', $faker->boolean(), $faker->boolean(), '.www.google.de'],
-            [$faker->text(), $faker->text(), new \DateTimeImmutable($faker->time()), '/', 'google.de', $faker->boolean(), $faker->boolean(), '.google.de'],
-        ];
-    }
+		$cookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
+
+		$result = @$cookie->save();
+
+		self::assertNull($result);
+	}
 }

@@ -8,6 +8,8 @@ declare(strict_types=1);
  * @version 1.0.0
  */
 
+namespace marcoschwepp\Cookie\Test;
+
 final class DataProvider
 {
     public static function domain(): array
@@ -32,7 +34,7 @@ final class DataProvider
 
     public static function cookie(): array
     {
-        $faker = Faker\Factory::create();
+        $faker = \Faker\Factory::create();
 
         $domain = $faker->randomElement(self::domain());
         $path = $faker->randomElement(['/', '/test', '/test/test', 'x', 'x/y', 'x/y/', 'x/y/z/']);
