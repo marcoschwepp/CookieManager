@@ -103,7 +103,7 @@ final class CookieTest extends TestCase
 
         $cookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
 
-        $result = @$cookie->save(); // @codingStandardsIgnoreLine
+        $result = @$cookie->save();
 
         self::assertNull($result);
     }
