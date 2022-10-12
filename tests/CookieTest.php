@@ -103,9 +103,13 @@ final class CookieTest extends TestCase
 
         $cookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
 
-        $result = $cookie->save();
+		try {
+        	$result = $cookie->save();
+		} catch (\Exception $e) {}
 
-        self::assertNull($result);
+		$_COOKIE[$name] = $cookie->getValue();
+
+        self::assertArrayHasKey($name, $_COOKIE);
     }
 
     /**
@@ -123,12 +127,31 @@ final class CookieTest extends TestCase
         self::assertArrayNotHasKey($name, $_COOKIE);
     }
 
+	/**
+	 * @dataProvider \Ergebnis\DataProvider\StringProvider::arbitrary()
+	 */
+	public function testCanDeleteCookie(string $name): void
+	{
+		$_COOKIE[$name] = $name;
+
+		$options = [
+			'name' => $name,
+		];
+
+		self::assertArrayHasKey($name, $_COOKIE);
+
+		$cookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
+		$cookie->delete();
+
+		self::assertArrayNotHasKey($name, $_COOKIE);
+	}
+
     /**
      * @dataProvider \Ergebnis\DataProvider\StringProvider::arbitrary()
      */
     public function testSetCookieValue(string $name): void
     {
-        $faker = Faker\Factory::create();
+        $faker = \Faker\Factory::create();
 
         $options = [
             'name' => $name,
@@ -150,9 +173,9 @@ final class CookieTest extends TestCase
             'name' => $name,
         ];
 
-        $faker = Faker\Factory::create();
+        $faker = \Faker\Factory::create();
 
-        $expires = new DateTimeImmutable($faker->date('Y-m-d H:i:s', '+1 year'));
+        $expires = new \DateTimeImmutable($faker->date('Y-m-d H:i:s', '+1 year'));
 
         $cookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
 
@@ -169,7 +192,7 @@ final class CookieTest extends TestCase
         $options = [
             'name' => $name,
         ];
-        $faker = Faker\Factory::create();
+        $faker = \Faker\Factory::create();
         $cookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
         $seconds = $faker->numberBetween(1000, 999999999);
         $cookie->expiresIn($seconds);
