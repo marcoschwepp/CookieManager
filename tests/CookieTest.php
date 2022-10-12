@@ -91,16 +91,19 @@ final class CookieTest extends TestCase
         self::assertSame($cookie->isHttpOnly(), $httpOnly);
     }
 
-    public function testCanSaveCookie(): void
+    /**
+     * @dataProvider \Ergebnis\DataProvider\StringProvider::uuid()
+     */
+    public function testCanSaveCookie(string $name): void
     {
         $options = [
-            'name' => 'test-cookie',
+            'name' => $name,
             'domain' => 'google.com',
         ];
 
         $cookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
 
-        $result = $cookie->save();
+        $result = @$cookie->save(); // @codingStandardsIgnoreLine
 
         self::assertNull($result);
     }
