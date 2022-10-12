@@ -94,7 +94,7 @@ final class CookieTest extends TestCase
     public function testCanSaveCookie(): void
     {
         $options = [
-            'name' => 'xxxx',
+            'name' => 'test',
             'domain' => 'google.com',
         ];
 
