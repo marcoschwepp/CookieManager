@@ -20,7 +20,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class CookieTest extends TestCase
 {
-	/**
+    /**
      * @dataProvider \Ergebnis\DataProvider\StringProvider::arbitrary()
      */
     public function testDefaults(string $name): void
@@ -91,17 +91,17 @@ final class CookieTest extends TestCase
         self::assertSame($cookie->isHttpOnly(), $httpOnly);
     }
 
-	public function testCanSaveCookie(): void
-	{
-		$options = [
-			'name' => 'xxxx',
-			'domain' => 'google.com'
-		];
+    public function testCanSaveCookie(): void
+    {
+        $options = [
+            'name' => 'xxxx',
+            'domain' => 'google.com',
+        ];
 
-		$cookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
+        $cookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
 
-		$result = @$cookie->save();
+        $result = $cookie->save();
 
-		self::assertNull($result);
-	}
+        self::assertNull($result);
+    }
 }
