@@ -50,7 +50,7 @@ final class CookieTest extends TestCase
         self::assertSame($newCookieFromOptions->getName(), $name);
         self::assertSame($newCookieFromOptions->getPath(), '/');
         self::assertFalse($newCookieFromOptions->isSecure());
-        self::assertSame($newCookieFromOptions->getDomain(), null);
+        self::assertEmpty($newCookieFromOptions->getDomain());
         self::assertFalse($newCookieFromOptions->isHttpOnly());
         self::assertEmpty($newCookieFromOptions->getValue());
         self::assertInstanceOf(\DateTimeImmutable::class, $newCookieFromOptions->getExpiresAt());
@@ -107,4 +107,90 @@ final class CookieTest extends TestCase
 
         self::assertNull($result);
     }
+
+	/**
+	 * @dataProvider \Ergebnis\DataProvider\StringProvider::arbitrary()
+	 */
+	public function testDeleteWhenCookieWasNotSaved(string $name): void
+	{
+		$options = [
+			'name' => $name,
+		];
+
+		$cookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
+		$cookie->delete();
+
+		self::assertArrayNotHasKey($name, $_COOKIE);
+	}
+
+	/**
+	 * @dataProvider \Ergebnis\DataProvider\StringProvider::arbitrary()
+	 */
+	public function testSetCookieValue(string $name): void
+	{
+		$faker = Faker\Factory::create();
+
+		$options = [
+			'name' => $name,
+		];
+		$value = $faker->text(20);
+
+		$cookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
+		$cookie->setValue($value);
+
+		self::assertSame($value, $cookie->getValue());
+	}
+
+	/**
+	 * @dataProvider \Ergebnis\DataProvider\StringProvider::arbitrary()
+	 */
+	public function testSetAndGetExpiresAt(string $name): void
+	{
+		$options = [
+			'name' => $name,
+		];
+
+		$expires = new DateTimeImmutable('now');
+		$expires = $expires->modify('+1 day');
+
+		$cookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
+
+		$cookie->expiresAt($expires);
+
+		self::assertSame($cookie->getExpiresAt(), $expires);
+	}
+
+	/**
+	 * @dataProvider \Ergebnis\DataProvider\StringProvider::arbitrary()
+	 */
+	public function testSetExpiresIn(string $name): void
+	{
+		$options = [
+			'name' => $name,
+		];
+		$cookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
+		$cookie->expiresIn(86400); // use data provider for that?
+		$formatedDate = new \DateTimeImmutable(sprintf('+ %s seconds', 86400));
+		$formatedDate = $formatedDate->format('Y-m-d H:i:s');
+
+		self::assertSame($formatedDate, $cookie->getExpiresAt()->format('Y-m-d H:i:s'));
+	}
+
+	/**
+	 * @dataProvider \Ergebnis\DataProvider\StringProvider::arbitrary()
+	 */
+	public function testCookieIsExpired(string $name): void
+	{
+		$options = [
+			'name' => $name,
+		];
+		$expiredCookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
+		$validCookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
+
+		$expiredCookie->expiresAt(new \DateTimeImmutable(sprintf('- %s day', 1)));
+		$validCookie->expiresAt(new \DateTimeImmutable(sprintf('+ %s day', 1)));
+
+		self::assertTrue($expiredCookie->isExpired());
+		self::assertFalse($validCookie->isExpired());
+	}
 }
