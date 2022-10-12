@@ -183,7 +183,7 @@ final class CookieTest extends TestCase
 	 */
 	public function testCookieIsExpired(string $modifier, bool $expected): void
 	{
-		$faker = Faker\Factory::create();
+		$faker = \Faker\Factory::create();
 		$options = [
 			'name' => $faker->word(),
 		];
