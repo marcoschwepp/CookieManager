@@ -9,6 +9,7 @@ declare(strict_types=1);
  */
 
 require_once __DIR__ . '/../vendor/autoload.php'; // Autoload files using Composer autoload
+
 require_once __DIR__ . '/DataProvider.php';
 
 use PHPUnit\Framework\TestCase;
@@ -20,21 +21,25 @@ use PHPUnit\Framework\TestCase;
  */
 final class CookieTest extends TestCase
 {
-	/** @dataProvider \Ergebnis\DataProvider\StringProvider::arbitrary() */
+    /**
+     * @dataProvider \Ergebnis\DataProvider\StringProvider::arbitrary()
+     */
     public function testDefaults(string $name): void
     {
         $newCookie = new marcoschwepp\Cookie\Cookie($name);
 
         self::assertSame($newCookie->getName(), $name);
         self::assertSame($newCookie->getPath(), '/');
-		self::assertSame($newCookie->getDomain(), '');
+        self::assertSame($newCookie->getDomain(), '');
         self::assertFalse($newCookie->isSecure());
         self::assertFalse($newCookie->isHttpOnly());
         self::assertEmpty($newCookie->getValue());
         self::assertInstanceOf(\DateTimeImmutable::class, $newCookie->getExpiresAt());
     }
 
-	/** @dataProvider \Ergebnis\DataProvider\StringProvider::arbitrary() */
+    /**
+     * @dataProvider \Ergebnis\DataProvider\StringProvider::arbitrary()
+     */
     public function testConstructFromOptions(string $name): void
     {
         $options = [
@@ -46,24 +51,25 @@ final class CookieTest extends TestCase
         self::assertSame($newCookieFromOptions->getName(), $name);
         self::assertSame($newCookieFromOptions->getPath(), '/');
         self::assertFalse($newCookieFromOptions->isSecure());
-		self::assertSame($newCookieFromOptions->getDomain(), null);
+        self::assertSame($newCookieFromOptions->getDomain(), null);
         self::assertFalse($newCookieFromOptions->isHttpOnly());
         self::assertEmpty($newCookieFromOptions->getValue());
         self::assertInstanceOf(\DateTimeImmutable::class, $newCookieFromOptions->getExpiresAt());
     }
 
-	/** @dataProvider \DataProvider::cookie() */
+    /**
+     * @dataProvider \DataProvider::cookie()
+     */
     public function testGettersAndSetters(
-		string $name,
-		string $value,
-		\DateTimeImmutable $expiresAt,
-		string $path,
-		string $domain,
-		bool $secure,
-		bool $httpOnly,
-		string $expectedDomain
-	): void
-    {
+        string $name,
+        string $value,
+        DateTimeImmutable $expiresAt,
+        string $path,
+        string $domain,
+        bool $secure,
+        bool $httpOnly,
+        string $expectedDomain
+    ): void {
         $options = [
             'name' => $name,
             'value' => $value,
@@ -78,21 +84,21 @@ final class CookieTest extends TestCase
 
         self::assertSame($cookie->getName(), $name);
         self::assertSame($cookie->getValue(), $value);
-		self::assertSame($cookie->getExpiresAt(), $expiresAt);
-		self::assertInstanceOf(\DateTimeImmutable::class, $cookie->getExpiresAt());
+        self::assertSame($cookie->getExpiresAt(), $expiresAt);
+        self::assertInstanceOf(\DateTimeImmutable::class, $cookie->getExpiresAt());
         self::assertSame($cookie->getPath(), $path);
         self::assertSame($cookie->getDomain(), $expectedDomain);
         self::assertSame($cookie->isSecure(), $secure);
         self::assertSame($cookie->isHttpOnly(), $httpOnly);
     }
 
-	public function cookieDataProvider(): array
-	{
-		$faker = Faker\Factory::create();
+    public function cookieDataProvider(): array
+    {
+        $faker = Faker\Factory::create();
 
-		return [
-			[$faker->text(), $faker->text(), new \DateTimeImmutable($faker->time()), '/', 'www.google.com', $faker->boolean(), $faker->boolean(), '.www.google.de'],
-			[$faker->text(), $faker->text(), new \DateTimeImmutable($faker->time()), '/', 'google.de', $faker->boolean(), $faker->boolean(), '.google.de'],
-		];
-	}
+        return [
+            [$faker->text(), $faker->text(), new \DateTimeImmutable($faker->time()), '/', 'www.google.com', $faker->boolean(), $faker->boolean(), '.www.google.de'],
+            [$faker->text(), $faker->text(), new \DateTimeImmutable($faker->time()), '/', 'google.de', $faker->boolean(), $faker->boolean(), '.google.de'],
+        ];
+    }
 }
