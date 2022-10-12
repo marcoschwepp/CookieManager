@@ -17,17 +17,17 @@ final class CookieUtility
         $domainLength = \mb_strlen($domain);
 
         if (3 > $domainLength || 253 < $domainLength) {
-            return null;
+            return '';
         }
 
         if (\mb_substr($domain, -1) === '.') {
-            return null;
+            return '';
         }
 
         $domain = \ltrim(\ltrim($domain, 'https://'), 'http://');
 
         if (!\filter_var('http://' . $domain, \FILTER_VALIDATE_URL)) {
-            return null;
+            return '';
         }
 
         return \sprintf('.%s', \ltrim($domain, '.'));

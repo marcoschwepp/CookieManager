@@ -115,7 +115,7 @@ final class Cookie
         $this->path = $path;
     }
 
-    public function getDomain(): ?string
+    public function getDomain(): string
     {
         return $this->domain;
     }
