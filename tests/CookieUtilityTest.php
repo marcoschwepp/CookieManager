@@ -8,7 +8,8 @@ declare(strict_types=1);
  * @version 1.0.0
  */
 
-require_once __DIR__ . '/../vendor/autoload.php'; // Autoload files using Composer autoload
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/DataProvider.php';
 
 use PHPUnit\Framework\TestCase;
 
@@ -19,31 +20,11 @@ use PHPUnit\Framework\TestCase;
  */
 final class CookieUtilityTest extends TestCase
 {
-	/** @dataProvider domainProvider */
+	/** @dataProvider \DataProvider::domain() */
     public function testNormalizeDomain(string $input, ?string $expected): void
     {
 		$normalizedDomain = marcoschwepp\Cookie\CookieUtility::normalizeDomain($input);
 
 		self::assertEquals($expected, $normalizedDomain);
     }
-
-	public function domainProvider(): array
-	{
-		return [
-			['www.google.de', '.www.google.de'],
-			['www.google', '.www.google'],
-			['google.de', '.google.de'],
-			['domain-@test.@de', null],
-			['xn--fsqu00a.xn--0zwm56d', '.xn--fsqu00a.xn--0zwm56d'],
-			['..', null],
-			['.', null],
-			['-_-', null],
-			['---', null],
-			['', null],
-			['www.test.de.', null],
-			['ab', null],
-			['https://google.com', '.google.com'],
-			['https://www.google.com', '.www.google.com'],
-		];
-	}
 }
