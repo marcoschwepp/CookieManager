@@ -153,7 +153,7 @@ final class Cookie
 
         $newCookie = $_COOKIE[$name];
 
-        return new self($name, $newCookie['value'], $newCookie['expires'], $newCookie['path'], CookieUtility::normalizeDomain($newCookie['domain']), $newCookie['secure'], $newCookie['httpOnly']);
+        return new self($name, $newCookie['value'], $newCookie['expiresAt'], $newCookie['path'], CookieUtility::normalizeDomain($newCookie['domain']), $newCookie['secure'], $newCookie['httpOnly']);
     }
 
     public function delete(): void
