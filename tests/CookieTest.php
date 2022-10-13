@@ -312,8 +312,7 @@ final class CookieTest extends TestCase
         string $path,
         string $domain,
         bool $secure,
-        bool $httpOnly,
-        string $expectedDomain
+        bool $httpOnly
     ): void {
         $faker = \Faker\Factory::create();
         $name = $faker->word();
@@ -367,7 +366,7 @@ final class CookieTest extends TestCase
     public function pathDataProvider(): array
     {
         $faker = \Faker\Factory::create();
-        $path = $faker->filePath();
+        $path = $faker->slug();
 
         return [
             [\sprintf('/%s', $path)],
