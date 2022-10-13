@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace marcoschwepp\Cookie\Test;
 
 use marcoschwepp\Cookie\Cookie;
+use marcoschwepp\Cookie\CookieUtility;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -103,11 +104,12 @@ final class CookieTest extends TestCase
 
         $cookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
 
-		try {
-        	$result = $cookie->save();
-		} catch (\Exception $e) {}
+        try {
+            $result = $cookie->save();
+        } catch (\Exception $e) {
+        }
 
-		$_COOKIE[$name] = $cookie->getValue();
+        $_COOKIE[$name] = $cookie->getValue();
 
         self::assertArrayHasKey($name, $_COOKIE);
     }
@@ -127,24 +129,24 @@ final class CookieTest extends TestCase
         self::assertArrayNotHasKey($name, $_COOKIE);
     }
 
-	/**
-	 * @dataProvider \Ergebnis\DataProvider\StringProvider::arbitrary()
-	 */
-	public function testCanDeleteCookie(string $name): void
-	{
-		$_COOKIE[$name] = $name;
+    /**
+     * @dataProvider \Ergebnis\DataProvider\StringProvider::arbitrary()
+     */
+    public function testCanDeleteCookie(string $name): void
+    {
+        $_COOKIE[$name] = $name;
 
-		$options = [
-			'name' => $name,
-		];
+        $options = [
+            'name' => $name,
+        ];
 
-		self::assertArrayHasKey($name, $_COOKIE);
+        self::assertArrayHasKey($name, $_COOKIE);
 
-		$cookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
-		$cookie->delete();
+        $cookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
+        $cookie->delete();
 
-		self::assertArrayNotHasKey($name, $_COOKIE);
-	}
+        self::assertArrayNotHasKey($name, $_COOKIE);
+    }
 
     /**
      * @dataProvider \Ergebnis\DataProvider\StringProvider::arbitrary()
@@ -217,6 +219,134 @@ final class CookieTest extends TestCase
         self::assertSame($expected, $cookie->isExpired());
     }
 
+    /**
+     * @dataProvider timeDataProvider
+     */
+    public function testGetRemainingTime(string $modifier): void
+    {
+        $faker = \Faker\Factory::create();
+        $options = [
+            'name' => $faker->word(),
+        ];
+        $cookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
+        $cookie->expiresAt(new \DateTimeImmutable($modifier));
+
+        self::assertSame($cookie->getExpiresAt()->getTimestamp() - \time(), $cookie->getRemainingTime());
+    }
+
+    /**
+     * @dataProvider pathDataProvider
+     */
+    public function testSetPath(string $path): void
+    {
+        $faker = \Faker\Factory::create();
+        $options = [
+            'name' => $faker->word(),
+        ];
+        $cookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
+        $cookie->setPath($path);
+
+        self::assertSame($path, $cookie->getPath());
+    }
+
+    /**
+     * @dataProvider \marcoschwepp\Cookie\Test\DataProvider::domain()
+     */
+    public function testCanSetDomain(string $domain): void
+    {
+        $faker = \Faker\Factory::create();
+        $options = [
+            'name' => $faker->word(),
+        ];
+        $cookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
+        $cookie->setDomain($domain);
+
+        self::assertSame(CookieUtility::normalizeDomain($domain), $cookie->getDomain());
+    }
+
+    /**
+     * @dataProvider \Ergebnis\DataProvider\BoolProvider::arbitrary()
+     */
+    public function testCanSetSecure(bool $isSecure): void
+    {
+        $faker = \Faker\Factory::create();
+        $options = [
+            'name' => $faker->word(),
+        ];
+        $cookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
+        $cookie->setSecure($isSecure);
+
+        self::assertSame($isSecure, $cookie->isSecure());
+    }
+
+    /**
+     * @dataProvider \Ergebnis\DataProvider\BoolProvider::arbitrary()
+     */
+    public function testCanSetHttpOnly(bool $httpOnly): void
+    {
+        $faker = \Faker\Factory::create();
+        $options = [
+            'name' => $faker->word(),
+        ];
+        $cookie = \marcoschwepp\Cookie\Cookie::constructFromOptions($options);
+        $cookie->setHttpOnly($httpOnly);
+
+        self::assertSame($httpOnly, $cookie->isHttpOnly());
+    }
+
+    public function testCanLoadReturnsNullIfCookieNotExists(): void
+    {
+        $faker = \Faker\Factory::create();
+        $cookie = \marcoschwepp\Cookie\Cookie::load($faker->word());
+
+        self::assertNull($cookie);
+    }
+
+    /**
+     * @dataProvider \marcoschwepp\Cookie\Test\DataProvider::cookie()
+     */
+    public function testCanLoadReturnsCookie(
+        string $name,
+        string $value,
+        \DateTimeImmutable $expiresAt,
+        string $path,
+        string $domain,
+        bool $secure,
+        bool $httpOnly
+    ): void {
+        $faker = \Faker\Factory::create();
+        $name = $faker->word();
+        $_COOKIE[$name] = [
+            'name' => $name,
+            'value' => $value,
+            'expiresAt' => $expiresAt,
+            'path' => $path,
+            'domain' => $domain,
+            'secure' => $secure,
+            'httpOnly' => $httpOnly,
+        ];
+
+        $cookie = \marcoschwepp\Cookie\Cookie::load($name);
+
+        self::assertInstanceOf(\marcoschwepp\Cookie\Cookie::class, $cookie);
+    }
+
+    public function timeDataProvider(): array
+    {
+        $faker = \Faker\Factory::create();
+        $days = $faker->numberBetween(2, 999);
+        $minutes = $faker->numberBetween(1, 9999);
+
+        return [
+            [\sprintf('- %s days', $days)],
+            [\sprintf('+ %s days', $days)],
+            ['- 1 day'],
+            ['+ 1 day'],
+            [\sprintf('- %s minutes', $minutes)],
+            [\sprintf('+ %s minutes', $minutes)],
+        ];
+    }
+
     public function expiredDataProvider(): array
     {
         $faker = \Faker\Factory::create();
@@ -230,6 +360,20 @@ final class CookieTest extends TestCase
             ['+ 1 day', false],
             [\sprintf('- %s minutes', $minutes), true],
             [\sprintf('+ %s minutes', $minutes), false],
+        ];
+    }
+
+    public function pathDataProvider(): array
+    {
+        $faker = \Faker\Factory::create();
+        $path = $faker->slug();
+
+        return [
+            [\sprintf('/%s', $path)],
+            [\sprintf('/%s/', $path)],
+            [\sprintf('//%s//', $path)],
+            [\sprintf('/%s/%d', $path, $path)],
+            [\sprintf('%s//', $path)],
         ];
     }
 }
