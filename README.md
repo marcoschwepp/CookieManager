@@ -8,6 +8,11 @@ Easy cookie management with php
 
 ## Installation
 
+Run
+```bash
+composer require marcoschwepp/CookieManager
+```
+
 ## Usage
 
 ### Create Cookie
